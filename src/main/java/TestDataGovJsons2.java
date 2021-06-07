@@ -2,7 +2,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -53,6 +55,7 @@ public class TestDataGovJsons2 {
 
         /////////
         List<WantedPersonGeneral> wantedPersonsGeneralList = null;
+        Set<String> categories = new HashSet<>();
 
         try {
 
@@ -64,8 +67,21 @@ public class TestDataGovJsons2 {
 
             for (WantedPersonGeneral person : wantedPersonsGeneralList) {
                 System.out.println(person);
+                categories.add(person.getCategory());
             }
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //набор доступных категорий разыскиваемых лиц выводим в файл на диске
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter("C:\\Work\\Temp\\categories.txt"));
+            for (String category : categories) {
+                bw.write(category.concat("\n"));
+            }
+            bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,6 +101,7 @@ public class TestDataGovJsons2 {
                     //if (index2 > 9)
                     //    break;
                     //WantedPerson person = wantedPersonsList.get(0);
+
                     String base64PictStr = person.getPhoto1base64encode();
 
                     //создаём объект с полем, содержащим фото, и выгружаем это фото на диск
